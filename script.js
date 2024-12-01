@@ -10,7 +10,7 @@ const planValues = {
     "Plano Avançado": 200.00
 };
 
-// Atualiza o valor do plano com base no plano selecionado, mas permite edição manual
+// Atualiza o valor do plano com base no plano selecionado
 function updatePlanValue() {
     const plan = document.getElementById('plan').value;
     const planValueInput = document.getElementById('planValue');
@@ -82,3 +82,21 @@ function removeClient(index) {
     clients.splice(index, 1); // Remove o cliente pelo índice
     updateTable(); // Atualiza a tabela
 }
+
+// Função de automação de envio de mensagens
+function automateReminders() {
+    const today = new Date();
+
+    clients.forEach((client, index) => {
+        const dueDate = new Date(client.dueDate);
+        const diffTime = dueDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Diferença em dias
+
+        if (diffDays === 3) { // 3 dias antes do vencimento
+            sendReminder(index);
+        }
+    });
+}
+
+// Configurar a automação para rodar a cada 24 horas
+setInterval(automateReminders, 24 * 60 * 60 * 1000); // Verifica uma vez por dia
